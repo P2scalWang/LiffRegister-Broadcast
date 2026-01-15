@@ -3,593 +3,403 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Safety Crisis Dashboard - Firebase</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ลงทะเบียน Safety Alert</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- LIFF SDK -->
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
         :root {
-            --primary: #0f172a;
+            --primary: #06C755;
+            --primary-dark: #05a648;
             --accent: #2563eb;
-            --success: #10b981;
             --danger: #ef4444;
-            --warning: #f59e0b;
-            --bg: #f8fafc;
+            --bg: #f0fdf4;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
             font-family: 'Sarabun', sans-serif;
-            background: var(--bg);
-            margin: 0;
+            background: linear-gradient(180deg, var(--primary) 0%, #dcfce7 100%);
+            min-height: 100vh;
             display: flex;
-            height: 100vh;
-            overflow: hidden;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
         }
 
-        #login-overlay {
+        .container {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            color: white;
+        }
+
+        .header .icon {
+            font-size: 4rem;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Card */
+        .card {
+            background: var(--card);
+            border-radius: 24px;
+            padding: 30px 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 25px;
+        }
+
+        .profile-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+        }
+
+        .profile-info h3 {
+            font-size: 1.1rem;
+            color: var(--text);
+            margin-bottom: 3px;
+        }
+
+        .profile-info p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .form-group label span {
+            color: var(--danger);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 1rem;
+            color: var(--text);
+            background: white;
+            transition: all 0.2s ease;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 20px;
+            padding-right: 45px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(6, 199, 85, 0.15);
+        }
+
+        .form-group input::placeholder {
+            color: #94a3b8;
+        }
+
+        /* Button */
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(6, 199, 85, 0.3);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Loading */
+        .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--primary);
+            background: rgba(255, 255, 255, 0.9);
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             z-index: 9999;
         }
 
-        .login-card {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            width: 350px;
-            text-align: center;
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e2e8f0;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        .login-card input {
-            width: 100%;
-            padding: 12px;
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            margin-top: 15px;
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        /* Already Registered */
+        .success-card {
+            text-align: center;
+            padding: 40px 25px;
+        }
+
+        .success-icon {
+            font-size: 5rem;
             margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-sizing: border-box;
         }
 
-        .login-card button {
-            width: 100%;
-            padding: 12px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
+        .success-card h2 {
+            color: var(--primary);
+            margin-bottom: 10px;
         }
 
-        .sidebar {
-            width: 260px;
-            background: var(--primary);
-            color: white;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar-header {
-            padding: 30px 20px;
-            text-align: center;
-            border-bottom: 1px solid #1e293b;
-        }
-
-        .nav-item {
-            padding: 18px 25px;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #94a3b8;
-        }
-
-        .nav-item:hover {
-            background: #1e293b;
-            color: white;
-        }
-
-        .nav-item.active {
-            background: var(--accent);
-            color: white;
-        }
-
-        .main-content {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 30px;
-        }
-
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+        .success-card p {
+            color: var(--text-light);
             margin-bottom: 25px;
         }
 
-        .stat-card {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-
-        .stat-card h3 {
-            margin: 0;
-            font-size: 0.9rem;
-            color: #64748b;
-        }
-
-        .stat-card .value {
-            font-size: 2.2rem;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .chart-grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 25px;
-        }
-
-        .chart-card {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-        }
-
-        .chart-wrapper {
-            height: 280px;
-        }
-
-        .table-container {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            background: #f1f5f9;
+        .info-box {
+            background: #f0fdf4;
+            border-radius: 12px;
             padding: 15px;
             text-align: left;
         }
 
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .badge {
-            padding: 5px 12px;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: white;
-        }
-
-        .bg-success {
-            background: var(--success);
-        }
-
-        .bg-danger {
-            background: var(--danger);
-        }
-
-        .bg-warning {
-            background: var(--warning);
-        }
-
-        .filter-bar {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
+        .info-row {
             display: flex;
-            gap: 12px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #dcfce7;
         }
 
-        .filter-bar select,
-        .filter-bar input {
-            padding: 10px 15px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            flex: 1;
-            min-width: 150px;
+        .info-row:last-child {
+            border-bottom: none;
         }
 
-        .bc-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        .info-row .label {
+            color: var(--text-light);
+            font-size: 0.9rem;
         }
 
-        .bc-card {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
+        .info-row .value {
+            color: var(--text);
+            font-weight: 600;
+            font-size: 0.9rem;
         }
 
-        .bc-card h4 {
-            margin: 0 0 15px 0;
-            color: #475569;
+        /* Error State */
+        .error-card {
+            text-align: center;
+            padding: 40px 25px;
         }
 
-        .bc-checkbox-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+        .error-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
         }
 
-        .bc-chip {
-            display: none;
-        }
-
-        .bc-chip+label {
-            padding: 10px 20px;
-            background: #f1f5f9;
-            border: 1px solid #e2e8f0;
-            border-radius: 25px;
-            cursor: pointer;
-        }
-
-        .bc-chip:checked+label {
+        .btn-retry {
             background: var(--accent);
             color: white;
-        }
-
-        .bc-chip.dept:checked+label {
-            background: var(--success);
-        }
-
-        .bc-message-card {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            margin-top: 20px;
-        }
-
-        .bc-textarea {
-            width: 100%;
-            min-height: 150px;
-            padding: 15px;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            font-family: 'Sarabun';
-            resize: vertical;
-            box-sizing: border-box;
-        }
-
-        .bc-send-btn {
-            margin-top: 20px;
-            padding: 15px 30px;
-            background: var(--accent);
             border: none;
-            border-radius: 12px;
-            color: white;
+            padding: 12px 30px;
+            border-radius: 10px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
+            margin-top: 20px;
         }
 
-        .bc-send-btn:disabled {
-            background: #cbd5e0;
-        }
-
-        .bc-add-row {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .bc-add-row input {
-            flex: 1;
-            padding: 10px 15px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-        }
-
-        .bc-add-row button {
-            padding: 10px 18px;
-            background: var(--success);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-        }
-
-        .realtime-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 12px;
-            background: #ecfdf5;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: var(--success);
-        }
-
-        .realtime-indicator .dot {
-            width: 8px;
-            height: 8px;
-            background: var(--success);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.5;
-            }
-        }
-
-        .action-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        .btn-edit {
-            color: var(--accent);
-        }
-
-        .btn-delete {
-            color: var(--danger);
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-        }
-
-        .modal-card {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 450px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 25px;
-        }
-
-        .btn-modal {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
+        /* Hide sections */
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 
 <body>
-    <div id="modalOverlay" class="modal-overlay">
-        <div class="modal-card">
-            <h2 id="modalTitle">จัดการข้อมูลพนักงาน</h2>
-            <input type="hidden" id="empKey">
-            <div style="margin-bottom:15px;"><label
-                    style="display:block;margin-bottom:5px;font-weight:bold;">เลขพนักงาน</label><input type="text"
-                    id="empId"
-                    style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;box-sizing:border-box;">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p class="loading-text">กำลังเชื่อมต่อ LINE...</p>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="icon">🛡️</div>
+            <h1>Safety Alert System</h1>
+            <p>ลงทะเบียนเพื่อรับการแจ้งเตือนเหตุฉุกเฉิน</p>
+        </div>
+
+        <!-- Registration Form Card -->
+        <div class="card hidden" id="registerCard">
+            <div class="profile-section">
+                <img id="profileImg" class="profile-img" src="https://via.placeholder.com/60" alt="Profile">
+                <div class="profile-info">
+                    <h3 id="displayName">กำลังโหลด...</h3>
+                    <p>บัญชี LINE ของคุณ</p>
+                </div>
             </div>
-            <div style="margin-bottom:15px;"><label
-                    style="display:block;margin-bottom:5px;font-weight:bold;">ชื่อ-นามสกุล</label><input type="text"
-                    id="empName"
-                    style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;box-sizing:border-box;">
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label>ชื่อ-นามสกุล <span>*</span></label>
+                    <input type="text" id="empName" placeholder="เช่น สมชาย ใจดี" required>
+                </div>
+
+                <div class="form-group">
+                    <label>รหัสพนักงาน <span>*</span></label>
+                    <input type="text" id="empId" placeholder="เช่น EMP001" required>
+                </div>
+
+                <div class="form-group">
+                    <label>สาขา <span>*</span></label>
+                    <select id="empBranch" required>
+                        <option value="">-- เลือกสาขา --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>แผนก <span>*</span></label>
+                    <select id="empDept" required>
+                        <option value="">-- เลือกแผนก --</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <span>✅</span> ลงทะเบียน
+                </button>
+            </form>
+        </div>
+
+        <!-- Already Registered Card -->
+        <div class="card success-card hidden" id="successCard">
+            <div class="success-icon">✅</div>
+            <h2>ลงทะเบียนแล้ว!</h2>
+            <p>คุณได้ลงทะเบียนในระบบเรียบร้อยแล้ว</p>
+            <div class="info-box">
+                <div class="info-row">
+                    <span class="label">ชื่อ</span>
+                    <span class="value" id="infoName">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">รหัสพนักงาน</span>
+                    <span class="value" id="infoEmpId">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">สาขา</span>
+                    <span class="value" id="infoBranch">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">แผนก</span>
+                    <span class="value" id="infoDept">-</span>
+                </div>
             </div>
-            <div style="margin-bottom:15px;"><label
-                    style="display:block;margin-bottom:5px;font-weight:bold;">สาขา</label><input type="text"
-                    id="empBranch"
-                    style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;box-sizing:border-box;">
-            </div>
-            <div style="margin-bottom:15px;"><label
-                    style="display:block;margin-bottom:5px;font-weight:bold;">แผนก</label><input type="text"
-                    id="empDept"
-                    style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;box-sizing:border-box;">
-            </div>
-            <div class="modal-buttons">
-                <button class="btn-modal" style="background:#e2e8f0;color:#475569;"
-                    onclick="closeModal()">ยกเลิก</button>
-                <button class="btn-modal" style="background:var(--accent);color:white;"
-                    onclick="handleSaveEmployee()">บันทึก</button>
-            </div>
+        </div>
+
+        <!-- Error Card -->
+        <div class="card error-card hidden" id="errorCard">
+            <div class="error-icon">⚠️</div>
+            <h2>เกิดข้อผิดพลาด</h2>
+            <p id="errorMsg">ไม่สามารถเชื่อมต่อได้ กรุณาลองใหม่</p>
+            <button class="btn-retry" onclick="location.reload()">ลองใหม่</button>
         </div>
     </div>
 
-    <div id="login-overlay">
-        <div class="login-card">
-            <i class="fas fa-user-shield fa-3x" style="color:var(--accent); margin-bottom:15px;"></i>
-            <h2>Safety Admin Login</h2>
-            <p style="color:#64748b; margin-bottom:20px;">🔥 Powered by Firebase</p>
-            <input type="text" id="username" placeholder="Username">
-            <input type="password" id="password" placeholder="Password">
-            <button onclick="handleLogin()">Login</button>
-        </div>
-    </div>
-
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h2><i class="fas fa-shield-alt"></i> SafetyApp</h2>
-        </div>
-        <div class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard')"><i
-                class="fas fa-chart-line"></i> Dashboard</div>
-        <div class="nav-item" id="nav-activity" onclick="showPage('activity')"><i class="fas fa-history"></i>
-            รายการตอบกลับ</div>
-        <div class="nav-item" id="nav-employees" onclick="showPage('employees')"><i class="fas fa-users-cog"></i>
-            จัดการพนักงาน</div>
-        <div class="nav-item" id="nav-broadcast" onclick="showPage('broadcast')"><i class="fas fa-bullhorn"></i>
-            ส่งประกาศ</div>
-        <div class="nav-item" onclick="handleLogout()" style="margin-top:auto; color:var(--danger);"><i
-                class="fas fa-sign-out-alt"></i> ออกจากระบบ</div>
-    </div>
-
-    <div class="main-content">
-        <div id="dashboard" class="page active">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;">
-                <h2>วิเคราะห์ข้อมูลความปลอดภัย</h2>
-                <span class="realtime-indicator"><span class="dot"></span> Realtime</span>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-card" style="border-top:5px solid var(--accent);">
-                    <h3>พนักงานในเหตุการณ์</h3>
-                    <div id="total-val" class="value">0</div>
-                </div>
-                <div class="stat-card" style="border-top:5px solid var(--success);">
-                    <h3>ปลอดภัย</h3>
-                    <div id="accept-val" class="value" style="color:var(--success)">0</div>
-                </div>
-                <div class="stat-card" style="border-top:5px solid var(--danger);">
-                    <h3>ขอความช่วยเหลือ</h3>
-                    <div id="help-val" class="value" style="color:var(--danger)">0</div>
-                </div>
-                <div class="stat-card" style="border-top:5px solid var(--warning);">
-                    <h3>รอการตอบกลับ</h3>
-                    <div id="wait-val" class="value" style="color:var(--warning)">0</div>
-                </div>
-            </div>
-            <div class="chart-grid">
-                <div class="chart-card">
-                    <h4>สัดส่วนความปลอดภัย</h4>
-                    <div class="chart-wrapper"><canvas id="pieChart"></canvas></div>
-                </div>
-                <div class="chart-card">
-                    <h4>สถิติเปรียบเทียบ</h4>
-                    <div class="chart-wrapper"><canvas id="barChart"></canvas></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="activity" class="page">
-            <h2 style="margin-bottom:20px;">รายการตอบกลับล่าสุด</h2>
-            <div class="filter-bar">
-                <select id="actStatusFilter" onchange="renderActivity()">
-                    <option value="all">ทุกสถานะ</option>
-                    <option value="Accept">ปลอดภัย</option>
-                    <option value="Help">ช่วยเหลือ</option>
-                    <option value="Wait">รอตอบกลับ</option>
-                </select>
-                <input type="text" id="searchAct" placeholder="ค้นหาชื่อ..." onkeyup="renderActivity()">
-            </div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ชื่อ / เหตุการณ์</th>
-                            <th>สาขา</th>
-                            <th>แผนก</th>
-                            <th>สถานะ</th>
-                            <th>เวลา</th>
-                        </tr>
-                    </thead>
-                    <tbody id="activityTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="employees" class="page">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;">
-                <h2>จัดการพนักงาน</h2>
-                <button onclick="openModal('add')"
-                    style="background:var(--success);color:white;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;"><i
-                        class="fas fa-user-plus"></i> เพิ่มพนักงาน</button>
-            </div>
-            <div class="filter-bar">
-                <input type="text" id="searchEmp" placeholder="ค้นหาชื่อ..." onkeyup="renderEmployees()">
-            </div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>เลขพนักงาน</th>
-                            <th>ชื่อ-นามสกุล</th>
-                            <th>สาขา</th>
-                            <th>แผนก</th>
-                            <th>จัดการ</th>
-                        </tr>
-                    </thead>
-                    <tbody id="employeeTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="broadcast" class="page">
-            <h2 style="margin-bottom:25px;"><i class="fas fa-bullhorn"></i> ส่งประกาศแจ้งเตือน</h2>
-            <div class="bc-grid">
-                <div class="bc-card">
-                    <h4><i class="fas fa-building" style="color:var(--accent)"></i> เลือกสาขา</h4>
-                    <div class="bc-checkbox-grid" id="bcBranchGrid"></div>
-                    <div class="bc-add-row">
-                        <input type="text" id="bcNewBranch" placeholder="พิมพ์สาขาใหม่...">
-                        <button onclick="bcAddBranch()"><i class="fas fa-plus"></i></button>
-                    </div>
-                </div>
-                <div class="bc-card">
-                    <h4><i class="fas fa-users" style="color:var(--success)"></i> เลือกแผนก</h4>
-                    <div class="bc-checkbox-grid" id="bcDeptGrid"></div>
-                    <div class="bc-add-row">
-                        <input type="text" id="bcNewDept" placeholder="พิมพ์แผนกใหม่...">
-                        <button onclick="bcAddDepartment()"><i class="fas fa-plus"></i></button>
-                    </div>
-                </div>
-            </div>
-            <div class="bc-message-card">
-                <h4><i class="fas fa-comment-alt" style="color:var(--warning)"></i> ชื่อเหตุการณ์</h4>
-                <input type="text" id="bcEventName" placeholder="เช่น Fire Drill 2026"
-                    style="width:100%;padding:12px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:15px;box-sizing:border-box;">
-                <h4><i class="fas fa-envelope" style="color:var(--danger)"></i> ข้อความ</h4>
-                <textarea id="bcMessage" class="bc-textarea" placeholder="พิมพ์ข้อความประกาศ..."></textarea>
-                <button class="bc-send-btn" onclick="bcSendBroadcast()"><i class="fas fa-paper-plane"></i> ส่ง
-                    Broadcast</button>
-            </div>
-        </div>
-    </div>
-
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-        import { getDatabase, ref, get, set, push, update, remove, onValue } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+        import { getDatabase, ref, get, set, push, update } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDYMkvTCHQ0oRuYANj1Axc_z6HrRkbxCnI",
             authDomain: "p2sowen.firebaseapp.com",
@@ -597,284 +407,199 @@
             projectId: "p2sowen",
             storageBucket: "p2sowen.firebasestorage.app",
             messagingSenderId: "432340752812",
-            appId: "1:432340752812:web:4cd4a2fc8182a111680209"
+            appId: "1:432340752812:web:4cd4a2fc8182a111680209",
+            measurementId: "G-KD8M18YTFW"
         };
 
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        // ==================== LINE Webhook URL ====================
-        const LINE_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwT-lPZwB1sZvC-zxrHtQ6i2FZdbg8BcJIeXjhlL9eA6usfpfUvXWxSUAbMkOrAWgjUmw/exec';
+        // ==================== LIFF Configuration ====================
+        // ⚠️ ต้องเปลี่ยนเป็น LIFF ID ของคุณ
+        const LIFF_ID = '2008902470-1J4o4fai';
 
-        let rawData = [];
-        let employeesData = [];
-        let pieChart, barChart;
-        let currentAction = 'add';
+        let userId = null;
+        let userProfile = null;
 
-        // ==================== Auth ====================
-        window.handleLogin = async function () {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            if (!user || !pass) return;
-
-            Swal.fire({ title: 'กำลังตรวจสอบ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-
+        // ==================== Initialize LIFF ====================
+        async function initializeLiff() {
             try {
-                const snapshot = await get(ref(database, `users/${user}`));
-                if (snapshot.exists() && snapshot.val().password === pass) {
-                    Swal.fire({ icon: 'success', title: 'สำเร็จ', timer: 1500, showConfirmButton: false }).then(() => {
-                        localStorage.setItem('isLoggedIn', 'true');
-                        document.getElementById('login-overlay').style.display = 'none';
-                        initRealtimeListeners();
-                    });
-                } else {
-                    Swal.fire({ icon: 'error', title: 'รหัสไม่ถูกต้อง' });
+                await liff.init({ liffId: LIFF_ID });
+
+                if (!liff.isLoggedIn()) {
+                    liff.login();
+                    return;
                 }
-            } catch (e) {
-                Swal.fire({ icon: 'error', title: e.message });
+
+                // Get user profile
+                userProfile = await liff.getProfile();
+                userId = userProfile.userId;
+
+                // Update UI with profile
+                document.getElementById('displayName').textContent = userProfile.displayName;
+                document.getElementById('profileImg').src = userProfile.pictureUrl || 'https://via.placeholder.com/60';
+
+                // Check if already registered
+                await checkRegistration();
+
+            } catch (error) {
+                console.error('LIFF init error:', error);
+                showError('ไม่สามารถเชื่อมต่อ LINE ได้: ' + error.message);
             }
-        };
-
-        window.handleLogout = function () {
-            localStorage.removeItem('isLoggedIn');
-            location.reload();
-        };
-
-        // ==================== Realtime ====================
-        function initRealtimeListeners() {
-            onValue(ref(database, 'logEvents'), (snapshot) => {
-                const data = snapshot.val();
-                rawData = data ? Object.keys(data).map(key => ({
-                    _key: key,
-                    'รายชื่อพนักงาน': data[key].employeeName || data[key]['รายชื่อพนักงาน'],
-                    'สาขา': data[key].branch || data[key]['สาขา'],
-                    'แผนก': data[key].department || data[key]['แผนก'],
-                    Event: data[key].event || data[key].Event,
-                    Reply: data[key].reply || data[key].Reply || 'Wait',
-                    Message: data[key].message || '',
-                    Time: data[key].time || data[key].Time
-                })) : [];
-                updateDashboard();
-                renderActivity();
-            });
-
-            onValue(ref(database, 'employees'), (snapshot) => {
-                const data = snapshot.val();
-                employeesData = data ? Object.keys(data).map(key => ({ _key: key, ...data[key] })) : [];
-                renderEmployees();
-            });
-
-            onValue(ref(database, 'config'), (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    if (data.branches) bcRenderBranches(data.branches);
-                    if (data.departments) bcRenderDepartments(data.departments);
-                }
-            });
         }
 
-        // ==================== Dashboard ====================
-        function updateDashboard() {
-            const a = rawData.filter(d => d.Reply === 'Accept').length;
-            const h = rawData.filter(d => d.Reply === 'Help').length;
-            const w = rawData.filter(d => d.Reply === 'Wait').length;
-
-            document.getElementById('total-val').innerText = rawData.length;
-            document.getElementById('accept-val').innerText = a;
-            document.getElementById('help-val').innerText = h;
-            document.getElementById('wait-val').innerText = w;
-
-            if (pieChart) pieChart.destroy();
-            pieChart = new Chart(document.getElementById('pieChart'), {
-                type: 'doughnut',
-                data: { labels: ['ปลอดภัย', 'ช่วยเหลือ', 'รอตอบกลับ'], datasets: [{ data: [a, h, w], backgroundColor: ['#10b981', '#ef4444', '#f59e0b'] }] },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '70%' }
-            });
-
-            const events = [...new Set(rawData.map(d => d.Event))].filter(Boolean);
-            if (barChart) barChart.destroy();
-            barChart = new Chart(document.getElementById('barChart'), {
-                type: 'bar',
-                data: {
-                    labels: events,
-                    datasets: [
-                        { label: 'ปลอดภัย', data: events.map(e => rawData.filter(d => d.Event === e && d.Reply === 'Accept').length), backgroundColor: '#10b981' },
-                        { label: 'ช่วยเหลือ', data: events.map(e => rawData.filter(d => d.Event === e && d.Reply === 'Help').length), backgroundColor: '#ef4444' },
-                        { label: 'รอตอบกลับ', data: events.map(e => rawData.filter(d => d.Event === e && d.Reply === 'Wait').length), backgroundColor: '#f59e0b' }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
-            });
-        }
-
-        // ==================== Activity ====================
-        window.renderActivity = function () {
-            const st = document.getElementById('actStatusFilter').value;
-            const s = document.getElementById('searchAct').value.toLowerCase();
-            const f = rawData.filter(d => (st === 'all' || d.Reply === st) && (d['รายชื่อพนักงาน'] || '').toLowerCase().includes(s));
-
-            document.getElementById('activityTableBody').innerHTML = f.map(i => `
-                <tr>
-                    <td><b>${i['รายชื่อพนักงาน'] || '-'}</b><br><small>${i.Event || '-'}</small></td>
-                    <td>${i['สาขา'] || '-'}</td>
-                    <td>${i['แผนก'] || '-'}</td>
-                    <td><span class="badge ${i.Reply === 'Accept' ? 'bg-success' : (i.Reply === 'Help' ? 'bg-danger' : 'bg-warning')}">${i.Reply}</span>${i.Reply === 'Help' && i.Message ? `<br><small style="color:var(--danger)">⚠️ ${i.Message}</small>` : ''}</td>
-                    <td>${i.Time ? new Date(i.Time).toLocaleString('th-TH') : '-'}</td>
-                </tr>
-            `).join('');
-        };
-
-        // ==================== Employees ====================
-        window.renderEmployees = function () {
-            const s = document.getElementById('searchEmp').value.toLowerCase();
-            const f = employeesData.filter(d => (d['รายชื่อพนักงาน'] || '').toLowerCase().includes(s));
-
-            document.getElementById('employeeTableBody').innerHTML = f.map(i => `
-                <tr>
-                    <td>${i['เลขพนักงาน'] || '-'}</td>
-                    <td><b>${i['รายชื่อพนักงาน'] || '-'}</b></td>
-                    <td>${i['สาขา'] || '-'}</td>
-                    <td>${i['แผนก'] || '-'}</td>
-                    <td>
-                        <button class="action-btn btn-edit" onclick="openModal('edit', '${i._key}', '${i['เลขพนักงาน']}', '${i['รายชื่อพนักงาน']}', '${i['สาขา']}', '${i['แผนก']}')"><i class="fas fa-edit"></i></button>
-                        <button class="action-btn btn-delete" onclick="handleDelete('${i._key}')"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-        };
-
-        window.openModal = function (action, key = '', empId = '', name = '', branch = '', dept = '') {
-            currentAction = action;
-            document.getElementById('modalTitle').innerText = action === 'add' ? 'เพิ่มพนักงานใหม่' : 'แก้ไขข้อมูล';
-            document.getElementById('empKey').value = key;
-            document.getElementById('empId').value = empId;
-            document.getElementById('empName').value = name;
-            document.getElementById('empBranch').value = branch;
-            document.getElementById('empDept').value = dept;
-            document.getElementById('modalOverlay').style.display = 'flex';
-        };
-
-        window.closeModal = function () {
-            document.getElementById('modalOverlay').style.display = 'none';
-        };
-
-        window.handleSaveEmployee = async function () {
-            const key = document.getElementById('empKey').value;
-            const data = {
-                'เลขพนักงาน': document.getElementById('empId').value,
-                'รายชื่อพนักงาน': document.getElementById('empName').value,
-                'สาขา': document.getElementById('empBranch').value,
-                'แผนก': document.getElementById('empDept').value,
-                Register: 'TRUE',
-                Status: 'active'
-            };
-
+        // ==================== Check Registration Status ====================
+        async function checkRegistration() {
             try {
-                if (currentAction === 'add') {
-                    await push(ref(database, 'employees'), data);
-                } else {
-                    await update(ref(database, `employees/${key}`), data);
+                const snapshot = await get(ref(database, 'employees'));
+                const employees = snapshot.val();
+
+                if (employees) {
+                    for (const key in employees) {
+                        if (employees[key].userId === userId) {
+                            // Already registered
+                            showRegisteredInfo(employees[key]);
+                            return;
+                        }
+                    }
                 }
-                Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', timer: 1500, showConfirmButton: false });
-                closeModal();
-            } catch (e) {
-                Swal.fire({ icon: 'error', title: e.message });
-            }
-        };
 
-        window.handleDelete = async function (key) {
-            const result = await Swal.fire({ title: 'ยืนยันการลบ?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', confirmButtonText: 'ลบ' });
-            if (result.isConfirmed) {
-                await remove(ref(database, `employees/${key}`));
-                Swal.fire({ icon: 'success', title: 'ลบแล้ว', timer: 1500, showConfirmButton: false });
-            }
-        };
+                // Not registered, show form
+                await loadConfig();
+                showRegisterForm();
 
-        // ==================== Broadcast ====================
-        function bcRenderBranches(branches) {
-            document.getElementById('bcBranchGrid').innerHTML = branches.map((b, i) => `<input type="checkbox" class="bc-chip" id="bc-branch-${i}" value="${b}"><label for="bc-branch-${i}">${b}</label>`).join('');
+            } catch (error) {
+                console.error('Check registration error:', error);
+                showError('ไม่สามารถตรวจสอบข้อมูลได้: ' + error.message);
+            }
         }
 
-        function bcRenderDepartments(departments) {
-            document.getElementById('bcDeptGrid').innerHTML = departments.map((d, i) => `<input type="checkbox" class="bc-chip dept" id="bc-dept-${i}" value="${d}"><label for="bc-dept-${i}">${d}</label>`).join('');
-        }
-
-        window.bcAddBranch = async function () {
-            const name = document.getElementById('bcNewBranch').value.trim();
-            if (!name) return;
-            const snapshot = await get(ref(database, 'config/branches'));
-            const branches = snapshot.val() || [];
-            if (!branches.includes(name)) {
-                branches.push(name);
-                await set(ref(database, 'config/branches'), branches);
-                document.getElementById('bcNewBranch').value = '';
-            }
-        };
-
-        window.bcAddDepartment = async function () {
-            const name = document.getElementById('bcNewDept').value.trim();
-            if (!name) return;
-            const snapshot = await get(ref(database, 'config/departments'));
-            const departments = snapshot.val() || [];
-            if (!departments.includes(name)) {
-                departments.push(name);
-                await set(ref(database, 'config/departments'), departments);
-                document.getElementById('bcNewDept').value = '';
-            }
-        };
-
-        window.bcSendBroadcast = async function () {
-            const message = document.getElementById('bcMessage').value.trim();
-            const eventName = document.getElementById('bcEventName').value.trim() || 'Alert';
-            const branches = Array.from(document.querySelectorAll('#bcBranchGrid input:checked')).map(cb => cb.value);
-            const departments = Array.from(document.querySelectorAll('#bcDeptGrid input:checked')).map(cb => cb.value);
-
-            if (!message) { Swal.fire({ icon: 'warning', title: 'กรุณาพิมพ์ข้อความ' }); return; }
-            if (branches.length === 0) { Swal.fire({ icon: 'warning', title: 'กรุณาเลือกสาขา' }); return; }
-            if (departments.length === 0) { Swal.fire({ icon: 'warning', title: 'กรุณาเลือกแผนก' }); return; }
-
-            Swal.fire({ title: 'กำลังส่ง...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-
+        // ==================== Load Config (Branches & Departments) ====================
+        async function loadConfig() {
             try {
-                await push(ref(database, 'broadcasts'), {
-                    message, eventName, branches, departments,
-                    timestamp: new Date().toISOString(),
-                    status: 'sent'
+                // Load branches
+                const branchSnapshot = await get(ref(database, 'config/branches'));
+                const branches = branchSnapshot.val() || [];
+                const branchSelect = document.getElementById('empBranch');
+                branches.forEach(branch => {
+                    const option = document.createElement('option');
+                    option.value = branch;
+                    option.textContent = branch;
+                    branchSelect.appendChild(option);
                 });
 
-                // ส่งไปยัง LINE Webhook
-                const params = new URLSearchParams({
-                    action: 'broadcast',
-                    message: message,
-                    event: eventName,
-                    branches: branches.join(','),
-                    departments: departments.join(',')
+                // Load departments
+                const deptSnapshot = await get(ref(database, 'config/departments'));
+                const departments = deptSnapshot.val() || [];
+                const deptSelect = document.getElementById('empDept');
+                departments.forEach(dept => {
+                    const option = document.createElement('option');
+                    option.value = dept;
+                    option.textContent = dept;
+                    deptSelect.appendChild(option);
                 });
-                fetch(`${LINE_WEBHOOK_URL}?${params.toString()}`, { mode: 'no-cors' });
 
-                Swal.fire({ icon: 'success', title: 'ส่ง Broadcast สำเร็จ! 🎉', timer: 2000, showConfirmButton: false });
-                document.getElementById('bcMessage').value = '';
-                document.getElementById('bcEventName').value = '';
-            } catch (e) {
-                Swal.fire({ icon: 'error', title: e.message });
+            } catch (error) {
+                console.error('Load config error:', error);
             }
-        };
+        }
 
-        // ==================== UI ====================
-        window.showPage = function (pId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById(pId).classList.add('active');
-            document.getElementById('nav-' + pId).classList.add('active');
-        };
+        // ==================== Handle Registration ====================
+        async function handleRegister(e) {
+            e.preventDefault();
 
-        // ==================== Init ====================
+            const name = document.getElementById('empName').value.trim();
+            const empId = document.getElementById('empId').value.trim();
+            const branch = document.getElementById('empBranch').value;
+            const dept = document.getElementById('empDept').value;
+
+            if (!name || !empId || !branch || !dept) {
+                Swal.fire({ icon: 'warning', title: 'กรุณากรอกข้อมูลให้ครบ' });
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner" style="width:20px;height:20px;border-width:2px;"></span> กำลังลงทะเบียน...';
+
+            try {
+                // Save to Firebase
+                const employeeData = {
+                    userId: userId,
+                    'เลขพนักงาน': empId,
+                    'รายชื่อพนักงาน': name,
+                    'สาขา': branch,
+                    'แผนก': dept,
+                    Register: 'TRUE',
+                    Status: 'active',
+                    lineDisplayName: userProfile.displayName,
+                    linePictureUrl: userProfile.pictureUrl || '',
+                    createdAt: new Date().toISOString()
+                };
+
+                await push(ref(database, 'employees'), employeeData);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'ลงทะเบียนสำเร็จ!',
+                    text: 'คุณจะได้รับการแจ้งเตือนเหตุฉุกเฉินผ่าน LINE',
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    showRegisteredInfo(employeeData);
+                });
+
+            } catch (error) {
+                console.error('Register error:', error);
+                Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: error.message });
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>✅</span> ลงทะเบียน';
+            }
+        }
+
+        // ==================== UI Functions ====================
+        function showRegisterForm() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+            document.getElementById('registerCard').classList.remove('hidden');
+        }
+
+        function showRegisteredInfo(employee) {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+            document.getElementById('registerCard').classList.add('hidden');
+            document.getElementById('successCard').classList.remove('hidden');
+
+            document.getElementById('infoName').textContent = employee['รายชื่อพนักงาน'] || '-';
+            document.getElementById('infoEmpId').textContent = employee['เลขพนักงาน'] || '-';
+            document.getElementById('infoBranch').textContent = employee['สาขา'] || '-';
+            document.getElementById('infoDept').textContent = employee['แผนก'] || '-';
+        }
+
+        function showError(message) {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+            document.getElementById('errorCard').classList.remove('hidden');
+            document.getElementById('errorMsg').textContent = message;
+        }
+
+        // ==================== Event Listeners ====================
+        document.getElementById('registerForm').addEventListener('submit', handleRegister);
+
+        // ==================== Initialize ====================
         window.addEventListener('load', () => {
-            if (localStorage.getItem('isLoggedIn') === 'true') {
-                document.getElementById('login-overlay').style.display = 'none';
-                initRealtimeListeners();
+            // Check if running in LIFF or browser
+            if (LIFF_ID === 'YOUR_LIFF_ID_HERE') {
+                // Demo mode - show form without LIFF
+                document.getElementById('loadingOverlay').classList.add('hidden');
+                document.getElementById('displayName').textContent = 'Demo User';
+                userId = 'demo_' + Date.now();
+
+                // Load config and show form
+                loadConfig().then(() => {
+                    document.getElementById('registerCard').classList.remove('hidden');
+                });
+            } else {
+                initializeLiff();
             }
-            document.getElementById('password').addEventListener('keypress', e => { if (e.key === 'Enter') handleLogin(); });
         });
     </script>
 </body>
