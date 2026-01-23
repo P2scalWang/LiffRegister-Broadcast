@@ -4,212 +4,708 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ลงทะเบียน Safety Alert</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- LIFF SDK -->
-    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <title>Income Out</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* ============================================
+           Income Out - Premium Glassmorphism Design
+           ============================================ */
+
+        /* CSS Variables */
         :root {
-            --primary: #06C755;
-            --primary-dark: #05a648;
-            --accent: #2563eb;
-            --danger: #ef4444;
-            --bg: #f0fdf4;
-            --card: #ffffff;
-            --text: #1e293b;
-            --text-light: #64748b;
+            /* Colors */
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-card: rgba(30, 30, 50, 0.7);
+            --bg-glass: rgba(255, 255, 255, 0.05); 
+
+            /* Income Colors (Green) */
+            --income-primary: #00d4aa;
+            --income-secondary: #00f5c4;
+            --income-gradient: linear-gradient(135deg, #00d4aa 0%, #00f5c4 50%, #7cffd4 100%);
+            --income-glow: rgba(0, 212, 170, 0.4);
+
+            /* Expense Colors (Red/Pink) */
+            --expense-primary: #ff6b6b;
+            --expense-secondary: #ff8e8e;
+            --expense-gradient: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 50%, #ffa8a8 100%);
+            --expense-glow: rgba(255, 107, 107, 0.4);
+
+            /* Text */
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.4);
+
+            /* Border */
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --border-active: rgba(255, 255, 255, 0.2);
+
+            /* Shadows */
+            --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.4);
+
+            /* Transitions */
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+
+            /* Border Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --radius-full: 50px;
         }
 
-        * {
-            box-sizing: border-box;
+        /* Reset & Base */
+        *,
+        *::before,
+        *::after {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Sarabun', sans-serif;
-            background: linear-gradient(180deg, var(--primary) 0%, #dcfce7 100%);
+            font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
+            overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        .container {
-            width: 100%;
-            max-width: 420px;
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            padding: 30px 20px;
-            color: white;
-        }
-
-        .header .icon {
-            font-size: 4rem;
-            margin-bottom: 10px;
-        }
-
-        .header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .header p {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        /* Card */
-        .card {
-            background: var(--card);
-            border-radius: 24px;
-            padding: 30px 25px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        .profile-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e2e8f0;
-            margin-bottom: 25px;
-        }
-
-        .profile-img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--primary);
-        }
-
-        .profile-info h3 {
-            font-size: 1.1rem;
-            color: var(--text);
-            margin-bottom: 3px;
-        }
-
-        .profile-info p {
-            font-size: 0.8rem;
-            color: var(--text-light);
-        }
-
-        /* Form */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-        }
-
-        .form-group label span {
-            color: var(--danger);
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-family: 'Sarabun', sans-serif;
-            font-size: 1rem;
-            color: var(--text);
-            background: white;
-            transition: all 0.2s ease;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        .form-group select {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            background-size: 20px;
-            padding-right: 45px;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(6, 199, 85, 0.15);
-        }
-
-        .form-group input::placeholder {
-            color: #94a3b8;
-        }
-
-        /* Button */
-        .btn-submit {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-family: 'Sarabun', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(6, 199, 85, 0.3);
-        }
-
-        .btn-submit:active {
-            transform: translateY(0);
-        }
-
-        .btn-submit:disabled {
-            background: #94a3b8;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        /* Loading */
-        .loading-overlay {
+        /* Background Animation */
+        .bg-animation {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.9);
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-gradient {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(0, 212, 170, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(255, 107, 107, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+        }
+
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.5;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--income-primary);
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 250px;
+            height: 250px;
+            background: var(--expense-primary);
+            bottom: -50px;
+            right: -50px;
+            animation-delay: -7s;
+        }
+
+        .shape-3 {
+            width: 200px;
+            height: 200px;
+            background: #6366f1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -14s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            25% {
+                transform: translate(30px, -30px) scale(1.05);
+            }
+
+            50% {
+                transform: translate(-20px, 20px) scale(0.95);
+            }
+
+            75% {
+                transform: translate(20px, 30px) scale(1.02);
+            }
+        }
+
+        /* Container */
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: var(--spacing-sm);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md) 0;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--income-gradient);
+            border-radius: var(--radius-md);
+            display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 9999;
+            box-shadow: 0 4px 20px var(--income-glow);
+        }
+
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--bg-primary);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--income-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: 6px 12px 6px 6px;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-full);
+            backdrop-filter: blur(10px);
+        }
+
+        .profile-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--bg-secondary);
+        }
+
+        .user-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Main Card */
+        .main-card {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-lg);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Type Toggle */
+        .type-toggle-container {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .type-toggle {
+            display: flex;
+            position: relative;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-full);
+            padding: 6px;
+            overflow: hidden;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: calc(50% - 6px);
+            height: calc(100% - 12px);
+            background: var(--income-gradient);
+            border-radius: var(--radius-full);
+            transition: all var(--transition-normal);
+            box-shadow: 0 4px 15px var(--income-glow);
+        }
+
+        .type-toggle.expense .toggle-slider {
+            left: calc(50%);
+            background: var(--expense-gradient);
+            box-shadow: 0 4px 15px var(--expense-glow);
+        }
+
+        .toggle-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 1;
+            transition: color var(--transition-fast);
+        }
+
+        .toggle-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .toggle-btn.active {
+            color: var(--bg-primary);
+        }
+
+        /* Form Styles */
+        .transaction-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .label-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Amount Input */
+        .amount-group {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .amount-input-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--bg-glass);
+            border: 2px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-md);
+            transition: all var(--transition-fast);
+        }
+
+        .amount-input-wrapper:focus-within {
+            border-color: var(--income-primary);
+            box-shadow: 0 0 0 4px var(--income-glow);
+        }
+
+        .type-toggle.expense~.transaction-form .amount-input-wrapper:focus-within {
+            border-color: var(--expense-primary);
+            box-shadow: 0 0 0 4px var(--expense-glow);
+        }
+
+        .currency-symbol {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-right: var(--spacing-sm);
+        }
+
+        .amount-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            font-family: inherit;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            outline: none;
+            width: 100%;
+        }
+
+        .amount-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Hide number input spinners */
+        .amount-input::-webkit-outer-spin-button,
+        .amount-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .amount-input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* Input Wrapper */
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-sm) var(--spacing-md);
+            transition: all var(--transition-fast);
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--border-active);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .input-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--text-muted);
+            margin-right: var(--spacing-sm);
+            flex-shrink: 0;
+        }
+
+        .form-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--text-primary);
+            outline: none;
+            width: 100%;
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .date-input {
+            color-scheme: dark;
+        }
+
+        .date-input::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            opacity: 0.6;
+            cursor: pointer;
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            position: relative;
+            background: var(--bg-glass);
+            border: 2px dashed var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            overflow: hidden;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--border-active);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .upload-zone.dragover {
+            border-color: var(--income-primary);
+            background: rgba(0, 212, 170, 0.1);
+        }
+
+        .upload-zone.has-image {
+            padding: 0;
+            border-style: solid;
+        }
+
+        .file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .upload-content {
+            pointer-events: none;
+        }
+
+        .upload-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto var(--spacing-sm);
+            background: var(--bg-glass);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upload-icon svg {
+            width: 28px;
+            height: 28px;
+            color: var(--text-muted);
+        }
+
+        .upload-text {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .upload-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Image Preview Grid */
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+        }
+
+        .image-preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-preview-item .remove-image {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 107, 107, 0.9);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 3;
+            transition: all var(--transition-fast);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .image-preview-item .remove-image:hover {
+            background: var(--expense-primary);
+            transform: scale(1.1);
+        }
+
+        .image-preview-item .remove-image svg {
+            width: 14px;
+            height: 14px;
+            color: white;
+        }
+
+        /* Image Count Badge */
+        .image-count {
+            background: var(--income-gradient);
+            color: var(--bg-primary);
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: var(--spacing-xs);
+        }
+
+        /* Add More Button */
+        .add-more-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            width: 100%;
+            padding: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+            background: var(--bg-glass);
+            border: 2px dashed var(--border-glass);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .add-more-btn:hover {
+            border-color: var(--border-active);
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+        }
+
+        .add-more-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            width: 100%;
+            padding: var(--spacing-md) var(--spacing-lg);
+            margin-top: var(--spacing-sm);
+            background: var(--income-gradient);
+            border: none;
+            border-radius: var(--radius-full);
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--bg-primary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            box-shadow: 0 8px 25px var(--income-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px var(--income-glow);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn.expense {
+            background: var(--expense-gradient);
+            box-shadow: 0 8px 25px var(--expense-glow);
+        }
+
+        .submit-btn.expense:hover {
+            box-shadow: 0 12px 35px var(--expense-glow);
+        }
+
+        .btn-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .btn-loader {
+            display: none;
+        }
+
+        .submit-btn.loading .btn-text,
+        .submit-btn.loading .btn-icon {
+            display: none;
+        }
+
+        .submit-btn.loading .btn-loader {
+            display: block;
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #e2e8f0;
-            border-top-color: var(--primary);
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(15, 15, 26, 0.3);
+            border-top-color: var(--bg-primary);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin {
@@ -218,389 +714,709 @@
             }
         }
 
-        .loading-text {
-            margin-top: 15px;
-            color: var(--text);
-            font-size: 1rem;
-        }
-
-        /* Already Registered */
-        .success-card {
+        /* Footer */
+        .footer {
             text-align: center;
-            padding: 40px 25px;
+            padding: var(--spacing-md) 0;
+            color: var(--text-muted);
+            font-size: 0.8rem;
         }
 
-        .success-icon {
-            font-size: 5rem;
-            margin-bottom: 15px;
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: var(--spacing-md);
         }
 
-        .success-card h2 {
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .success-card p {
-            color: var(--text-light);
-            margin-bottom: 25px;
-        }
-
-        .info-box {
-            background: #f0fdf4;
-            border-radius: 12px;
-            padding: 15px;
-            text-align: left;
-        }
-
-        .info-row {
+        .modal.show {
             display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #dcfce7;
         }
 
-        .info-row:last-child {
-            border-bottom: none;
+        .modal-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
         }
 
-        .info-row .label {
-            color: var(--text-light);
-            font-size: 0.9rem;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
-        .info-row .value {
-            color: var(--text);
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        /* Error State */
-        .error-card {
+        .modal-content {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            max-width: 320px;
+            width: 100%;
             text-align: center;
-            padding: 40px 25px;
+            backdrop-filter: blur(20px);
+            animation: slideUp 0.3s ease;
         }
 
-        .error-icon {
-            font-size: 4rem;
-            margin-bottom: 15px;
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .btn-retry {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 10px;
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--spacing-md);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content.success .modal-icon {
+            background: rgba(0, 212, 170, 0.15);
+        }
+
+        .modal-content.success .modal-icon svg {
+            width: 40px;
+            height: 40px;
+            color: var(--income-primary);
+        }
+
+        .modal-content.error .modal-icon {
+            background: rgba(255, 107, 107, 0.15);
+        }
+
+        .modal-content.error .modal-icon svg {
+            width: 40px;
+            height: 40px;
+            color: var(--expense-primary);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .modal-message {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-full);
+            font-family: inherit;
             font-size: 1rem;
-            font-weight: 600;
+            font-weight: 500;
+            color: var(--text-primary);
             cursor: pointer;
-            margin-top: 20px;
+            transition: all var(--transition-fast);
         }
 
-        /* Hide sections */
-        .hidden {
-            display: none !important;
+        .modal-btn:hover {
+            background: var(--border-active);
+        }
+
+        /* Responsive */
+        @media (max-width: 380px) {
+            .container {
+                padding: var(--spacing-xs);
+            }
+
+            .main-card {
+                padding: var(--spacing-md);
+            }
+
+            .amount-input {
+                font-size: 2rem;
+            }
+
+            .currency-symbol {
+                font-size: 1.5rem;
+            }
+
+            .toggle-btn {
+                padding: var(--spacing-xs) var(--spacing-sm);
+                font-size: 0.9rem;
+            }
+
+            .toggle-btn svg {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        /* Safe Area for notched devices */
+        @supports (padding: max(0px)) {
+            .container {
+                padding-left: max(var(--spacing-sm), env(safe-area-inset-left));
+                padding-right: max(var(--spacing-sm), env(safe-area-inset-right));
+                padding-bottom: max(var(--spacing-sm), env(safe-area-inset-bottom));
+            }
         }
     </style>
 </head>
 
 <body>
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="spinner"></div>
-        <p class="loading-text">กำลังเชื่อมต่อ LINE...</p>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="bg-gradient"></div>
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
     </div>
 
+    <!-- Main Container -->
     <div class="container">
         <!-- Header -->
-        <div class="header">
-            <div class="icon">🛡️</div>
-            <h1>Safety Alert System</h1>
-            <p>ลงทะเบียนเพื่อรับการแจ้งเตือนเหตุฉุกเฉิน</p>
-        </div>
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                    </svg>
+                </div>
+                <span class="logo-text">Income Out</span>
+            </div>
+            <div class="user-profile" id="userProfile">
+                <img src="" alt="Profile" class="profile-img" id="profileImg">
+                <span class="user-name" id="userName">กำลังโหลด...</span>
+            </div>
+        </header>
 
-        <!-- Registration Form Card -->
-        <div class="card hidden" id="registerCard">
-            <div class="profile-section">
-                <img id="profileImg" class="profile-img" src="https://via.placeholder.com/60" alt="Profile">
-                <div class="profile-info">
-                    <h3 id="displayName">กำลังโหลด...</h3>
-                    <p>บัญชี LINE ของคุณ</p>
+        <!-- Main Card -->
+        <main class="main-card">
+            <!-- Type Toggle -->
+            <div class="type-toggle-container">
+                <div class="type-toggle" id="typeToggle">
+                    <div class="toggle-slider" id="toggleSlider"></div>
+                    <button class="toggle-btn active" data-type="income" id="incomeBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 19V5M5 12l7-7 7 7" />
+                        </svg>
+                        <span>รายรับ</span>
+                    </button>
+                    <button class="toggle-btn" data-type="expense" id="expenseBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12l7 7 7-7" />
+                        </svg>
+                        <span>รายจ่าย</span>
+                    </button>
                 </div>
             </div>
 
-            <form id="registerForm">
+            <!-- Form -->
+            <form id="transactionForm" class="transaction-form">
+                <!-- Image Upload -->
                 <div class="form-group">
-                    <label>ชื่อ-นามสกุล <span>*</span></label>
-                    <input type="text" id="empName" placeholder="เช่น สมชาย ใจดี" required>
+                    <label class="form-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="label-icon">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                            <circle cx="8.5" cy="8.5" r="1.5" />
+                            <polyline points="21 15 16 10 5 21" />
+                        </svg>
+                        อัพโหลดรูปสลิป / ใบเสร็จ <span class="image-count" id="imageCount"></span>
+                    </label>
+                    <div class="upload-zone" id="uploadZone">
+                        <input type="file" id="imageInput" accept="image/*" multiple class="file-input">
+                        <div class="upload-content" id="uploadContent">
+                            <div class="upload-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
+                            </div>
+                            <p class="upload-text">แตะเพื่อเลือกรูป (เลือกได้หลายรูป)</p>
+                            <p class="upload-hint">รองรับ JPG, PNG, HEIC</p>
+                        </div>
+                    </div>
+                    <!-- Image Preview Grid -->
+                    <div class="image-preview-grid" id="imagePreviewGrid"></div>
+                    <!-- Add More Button -->
+                    <button type="button" class="add-more-btn" id="addMoreBtn" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                        เพิ่มรูปอีก
+                    </button>
                 </div>
 
-                <div class="form-group">
-                    <label>รหัสพนักงาน <span>*</span></label>
-                    <input type="text" id="empId" placeholder="เช่น EMP001" required>
-                </div>
-
-                <div class="form-group">
-                    <label>สาขา <span>*</span></label>
-                    <select id="empBranch" required>
-                        <option value="">-- เลือกสาขา --</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>แผนก <span>*</span></label>
-                    <select id="empDept" required>
-                        <option value="">-- เลือกแผนก --</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn-submit" id="submitBtn">
-                    <span>✅</span> ลงทะเบียน
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="btn-text">บันทึกรายการ</span>
+                    <div class="btn-loader">
+                        <div class="spinner"></div>
+                    </div>
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13" />
+                        <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                    </svg>
                 </button>
             </form>
-        </div>
+        </main>
 
-        <!-- Already Registered Card -->
-        <div class="card success-card hidden" id="successCard">
-            <div class="success-icon">✅</div>
-            <h2>ลงทะเบียนแล้ว!</h2>
-            <p>คุณได้ลงทะเบียนในระบบเรียบร้อยแล้ว</p>
-            <div class="info-box">
-                <div class="info-row">
-                    <span class="label">ชื่อ</span>
-                    <span class="value" id="infoName">-</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">รหัสพนักงาน</span>
-                    <span class="value" id="infoEmpId">-</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">สาขา</span>
-                    <span class="value" id="infoBranch">-</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">แผนก</span>
-                    <span class="value" id="infoDept">-</span>
-                </div>
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Powered by LINE LIFF</p>
+        </footer>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content success">
+            <div class="modal-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
             </div>
-        </div>
-
-        <!-- Error Card -->
-        <div class="card error-card hidden" id="errorCard">
-            <div class="error-icon">⚠️</div>
-            <h2>เกิดข้อผิดพลาด</h2>
-            <p id="errorMsg">ไม่สามารถเชื่อมต่อได้ กรุณาลองใหม่</p>
-            <button class="btn-retry" onclick="location.reload()">ลองใหม่</button>
+            <h3 class="modal-title">บันทึกสำเร็จ!</h3>
+            <p class="modal-message">รายการของคุณถูกบันทึกเรียบร้อยแล้ว</p>
+            <button class="modal-btn" id="closeSuccessModal">ตกลง</button>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-        import { getDatabase, ref, get, set, push, update } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+    <!-- Error Modal -->
+    <div class="modal" id="errorModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content error">
+            <div class="modal-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="15" y1="9" x2="9" y2="15" />
+                    <line x1="9" y1="9" x2="15" y2="15" />
+                </svg>
+            </div>
+            <h3 class="modal-title">เกิดข้อผิดพลาด</h3>
+            <p class="modal-message" id="errorMessage">กรุณาลองใหม่อีกครั้ง</p>
+            <button class="modal-btn" id="closeErrorModal">ตกลง</button>
+        </div>
+    </div>
 
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDYMkvTCHQ0oRuYANj1Axc_z6HrRkbxCnI",
-            authDomain: "p2sowen.firebaseapp.com",
-            databaseURL: "https://p2sowen-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "p2sowen",
-            storageBucket: "p2sowen.firebasestorage.app",
-            messagingSenderId: "432340752812",
-            appId: "1:432340752812:web:4cd4a2fc8182a111680209",
-            measurementId: "G-KD8M18YTFW"
+    <!-- LIFF SDK -->
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script>
+        // ============================================
+        // Income Out - LINE LIFF App JavaScript
+        // ============================================
+
+        // Configuration - UPDATE THESE VALUES
+        const CONFIG = {
+            LIFF_ID: '2008902470-1J4o4fai', // ใส่ LIFF ID ของคุณที่นี่
+            WEBHOOK_URL: 'https://n8n.srv1038568.hstgr.cloud/webhook/Test' // ใส่ URL webhook ของ n8n ที่นี่
         };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
+        // App State
+        const state = {
+            type: 'income',
+            images: [], // Array of { data: base64, mimeType: string }
+            userProfile: null,
+            isSubmitting: false
+        };
 
-        // ==================== LIFF Configuration ====================
-        // ⚠️ ต้องเปลี่ยนเป็น LIFF ID ของคุณ
-        const LIFF_ID = '2008902470-1J4o4fai';
+        // DOM Elements
+        const elements = {
+            typeToggle: null,
+            toggleSlider: null,
+            incomeBtn: null,
+            expenseBtn: null,
+            form: null,
+            uploadZone: null,
+            imageInput: null,
+            uploadContent: null,
+            imagePreviewGrid: null,
+            imageCount: null,
+            addMoreBtn: null,
+            submitBtn: null,
+            userProfile: null,
+            profileImg: null,
+            userName: null,
+            successModal: null,
+            errorModal: null,
+            errorMessage: null
+        };
 
-        let userId = null;
-        let userProfile = null;
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', async () => {
+            initializeElements();
+            initializeEventListeners();
+            await initializeLiff();
+        });
 
-        // ==================== Initialize LIFF ====================
+        // Initialize DOM Elements
+        function initializeElements() {
+            elements.typeToggle = document.getElementById('typeToggle');
+            elements.toggleSlider = document.getElementById('toggleSlider');
+            elements.incomeBtn = document.getElementById('incomeBtn');
+            elements.expenseBtn = document.getElementById('expenseBtn');
+            elements.form = document.getElementById('transactionForm');
+            elements.uploadZone = document.getElementById('uploadZone');
+            elements.imageInput = document.getElementById('imageInput');
+            elements.uploadContent = document.getElementById('uploadContent');
+            elements.imagePreviewGrid = document.getElementById('imagePreviewGrid');
+            elements.imageCount = document.getElementById('imageCount');
+            elements.addMoreBtn = document.getElementById('addMoreBtn');
+            elements.submitBtn = document.getElementById('submitBtn');
+            elements.userProfile = document.getElementById('userProfile');
+            elements.profileImg = document.getElementById('profileImg');
+            elements.userName = document.getElementById('userName');
+            elements.successModal = document.getElementById('successModal');
+            elements.errorModal = document.getElementById('errorModal');
+            elements.errorMessage = document.getElementById('errorMessage');
+        }
+
+        // Initialize Event Listeners
+        function initializeEventListeners() {
+            // Type Toggle
+            elements.incomeBtn.addEventListener('click', () => setType('income'));
+            elements.expenseBtn.addEventListener('click', () => setType('expense'));
+
+            // Form Submit
+            elements.form.addEventListener('submit', handleSubmit);
+
+            // Image Upload
+            elements.imageInput.addEventListener('change', handleImageSelect);
+
+            // Add More Button
+            elements.addMoreBtn.addEventListener('click', () => {
+                elements.imageInput.click();
+            });
+
+            // Drag and Drop
+            elements.uploadZone.addEventListener('dragover', handleDragOver);
+            elements.uploadZone.addEventListener('dragleave', handleDragLeave);
+            elements.uploadZone.addEventListener('drop', handleDrop);
+
+            // Modals
+            document.getElementById('closeSuccessModal').addEventListener('click', () => {
+                hideModal(elements.successModal);
+                resetForm();
+            });
+            document.getElementById('closeErrorModal').addEventListener('click', () => {
+                hideModal(elements.errorModal);
+            });
+
+            // Close modal on backdrop click
+            elements.successModal.querySelector('.modal-backdrop').addEventListener('click', () => {
+                hideModal(elements.successModal);
+                resetForm();
+            });
+            elements.errorModal.querySelector('.modal-backdrop').addEventListener('click', () => {
+                hideModal(elements.errorModal);
+            });
+        }
+
+        // Initialize LIFF
         async function initializeLiff() {
             try {
-                await liff.init({ liffId: LIFF_ID });
-
-                if (!liff.isLoggedIn()) {
-                    liff.login();
+                // Check if LIFF ID is configured
+                if (CONFIG.LIFF_ID === 'YOUR_LIFF_ID_HERE') {
+                    console.warn('LIFF ID not configured. Running in development mode.');
+                    setDevelopmentMode();
                     return;
                 }
 
-                // Get user profile
-                userProfile = await liff.getProfile();
-                userId = userProfile.userId;
+                await liff.init({
+                    liffId: CONFIG.LIFF_ID
+                });
 
-                // Update UI with profile
-                document.getElementById('displayName').textContent = userProfile.displayName;
-                document.getElementById('profileImg').src = userProfile.pictureUrl || 'https://via.placeholder.com/60';
-
-                // Check if already registered
-                await checkRegistration();
-
-            } catch (error) {
-                console.error('LIFF init error:', error);
-                showError('ไม่สามารถเชื่อมต่อ LINE ได้: ' + error.message);
-            }
-        }
-
-        // ==================== Check Registration Status ====================
-        async function checkRegistration() {
-            try {
-                const snapshot = await get(ref(database, 'employees'));
-                const employees = snapshot.val();
-
-                if (employees) {
-                    for (const key in employees) {
-                        if (employees[key].userId === userId) {
-                            // Already registered
-                            showRegisteredInfo(employees[key]);
-                            return;
-                        }
-                    }
+                if (liff.isLoggedIn()) {
+                    await loadUserProfile();
+                } else {
+                    // Redirect to LINE login
+                    liff.login();
                 }
-
-                // Not registered, show form
-                await loadConfig();
-                showRegisterForm();
-
             } catch (error) {
-                console.error('Check registration error:', error);
-                showError('ไม่สามารถตรวจสอบข้อมูลได้: ' + error.message);
+                console.error('LIFF initialization failed:', error);
+                setDevelopmentMode();
             }
         }
 
-        // ==================== Load Config (Branches & Departments) ====================
-        async function loadConfig() {
+        // Load User Profile from LINE
+        async function loadUserProfile() {
             try {
-                // Load branches
-                const branchSnapshot = await get(ref(database, 'config/branches'));
-                const branches = branchSnapshot.val() || [];
-                const branchSelect = document.getElementById('empBranch');
-                branches.forEach(branch => {
-                    const option = document.createElement('option');
-                    option.value = branch;
-                    option.textContent = branch;
-                    branchSelect.appendChild(option);
-                });
+                const profile = await liff.getProfile();
+                state.userProfile = profile;
 
-                // Load departments
-                const deptSnapshot = await get(ref(database, 'config/departments'));
-                const departments = deptSnapshot.val() || [];
-                const deptSelect = document.getElementById('empDept');
-                departments.forEach(dept => {
-                    const option = document.createElement('option');
-                    option.value = dept;
-                    option.textContent = dept;
-                    deptSelect.appendChild(option);
-                });
+                elements.profileImg.src = profile.pictureUrl || '';
+                elements.userName.textContent = profile.displayName || 'ผู้ใช้';
 
+                if (!profile.pictureUrl) {
+                    elements.profileImg.style.display = 'none';
+                }
             } catch (error) {
-                console.error('Load config error:', error);
+                console.error('Failed to get user profile:', error);
+                elements.userName.textContent = 'ผู้ใช้';
             }
         }
 
-        // ==================== Handle Registration ====================
-        async function handleRegister(e) {
-            e.preventDefault();
+        // Set Development Mode (when LIFF is not available)
+        function setDevelopmentMode() {
+            elements.userName.textContent = 'Dev Mode';
+            elements.profileImg.style.background = 'linear-gradient(135deg, #00d4aa, #00f5c4)';
+            state.userProfile = {
+                userId: 'dev_user_001',
+                displayName: 'Developer'
+            };
+        }
 
-            const name = document.getElementById('empName').value.trim();
-            const empId = document.getElementById('empId').value.trim();
-            const branch = document.getElementById('empBranch').value;
-            const dept = document.getElementById('empDept').value;
+        // Set Transaction Type
+        function setType(type) {
+            state.type = type;
 
-            if (!name || !empId || !branch || !dept) {
-                Swal.fire({ icon: 'warning', title: 'กรุณากรอกข้อมูลให้ครบ' });
+            // Update toggle UI
+            if (type === 'income') {
+                elements.typeToggle.classList.remove('expense');
+                elements.incomeBtn.classList.add('active');
+                elements.expenseBtn.classList.remove('active');
+                elements.submitBtn.classList.remove('expense');
+            } else {
+                elements.typeToggle.classList.add('expense');
+                elements.expenseBtn.classList.add('active');
+                elements.incomeBtn.classList.remove('active');
+                elements.submitBtn.classList.add('expense');
+            }
+        }
+
+        // Handle Image Selection (Multiple)
+        function handleImageSelect(event) {
+            const files = Array.from(event.target.files);
+            if (files.length > 0) {
+                files.forEach(file => processImage(file));
+            }
+            // Reset input so same file can be selected again
+            event.target.value = '';
+        }
+
+        // Handle Drag Over
+        function handleDragOver(event) {
+            event.preventDefault();
+            elements.uploadZone.classList.add('dragover');
+        }
+
+        // Handle Drag Leave
+        function handleDragLeave(event) {
+            event.preventDefault();
+            elements.uploadZone.classList.remove('dragover');
+        }
+
+        // Handle Drop
+        function handleDrop(event) {
+            event.preventDefault();
+            elements.uploadZone.classList.remove('dragover');
+
+            const files = Array.from(event.dataTransfer.files).filter(file => file.type.startsWith('image/'));
+            files.forEach(file => processImage(file));
+        }
+
+        // Process Image
+        function processImage(file) {
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                showError('กรุณาเลือกไฟล์รูปภาพเท่านั้น');
                 return;
             }
 
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner" style="width:20px;height:20px;border-width:2px;"></span> กำลังลงทะเบียน...';
+            // Validate file size (max 10MB per image)
+            if (file.size > 10 * 1024 * 1024) {
+                showError('ขนาดไฟล์ต้องไม่เกิน 10MB');
+                return;
+            }
 
-            try {
-                // Save to Firebase
-                const employeeData = {
-                    userId: userId,
-                    'เลขพนักงาน': empId,
-                    'รายชื่อพนักงาน': name,
-                    'สาขา': branch,
-                    'แผนก': dept,
-                    Register: 'TRUE',
-                    Status: 'active',
-                    lineDisplayName: userProfile.displayName,
-                    linePictureUrl: userProfile.pictureUrl || '',
-                    createdAt: new Date().toISOString()
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                const base64Data = e.target.result;
+                const imageData = {
+                    data: base64Data.split(',')[1], // Remove data URL prefix
+                    mimeType: file.type,
+                    preview: base64Data // Full data URL for preview
                 };
 
-                await push(ref(database, 'employees'), employeeData);
+                state.images.push(imageData);
+                renderImagePreviews();
+                updateImageCount();
+            };
 
-                Swal.fire({
-                    icon: 'success',
-                    title: 'ลงทะเบียนสำเร็จ!',
-                    text: 'คุณจะได้รับการแจ้งเตือนเหตุฉุกเฉินผ่าน LINE',
-                    timer: 2000,
-                    showConfirmButton: false
-                }).then(() => {
-                    showRegisteredInfo(employeeData);
+            reader.onerror = () => {
+                showError('ไม่สามารถอ่านไฟล์ได้');
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        // Render Image Previews
+        function renderImagePreviews() {
+            elements.imagePreviewGrid.innerHTML = '';
+
+            state.images.forEach((image, index) => {
+                const item = document.createElement('div');
+                item.className = 'image-preview-item';
+                item.innerHTML = `
+            <img src="${image.preview}" alt="Preview ${index + 1}">
+            <button type="button" class="remove-image" data-index="${index}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        `;
+                elements.imagePreviewGrid.appendChild(item);
+            });
+
+            // Add event listeners to remove buttons
+            elements.imagePreviewGrid.querySelectorAll('.remove-image').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const index = parseInt(btn.dataset.index);
+                    removeImage(index);
                 });
+            });
+
+            // Show/hide add more button
+            elements.addMoreBtn.style.display = state.images.length > 0 ? 'flex' : 'none';
+        }
+
+        // Update Image Count
+        function updateImageCount() {
+            if (state.images.length > 0) {
+                elements.imageCount.textContent = `(${state.images.length} รูป)`;
+                elements.imageCount.style.display = 'inline';
+            } else {
+                elements.imageCount.textContent = '';
+                elements.imageCount.style.display = 'none';
+            }
+        }
+
+        // Remove Image
+        function removeImage(index) {
+            state.images.splice(index, 1);
+            renderImagePreviews();
+            updateImageCount();
+        }
+
+        // Handle Form Submit
+        async function handleSubmit(event) {
+            event.preventDefault();
+
+            if (state.isSubmitting) return;
+
+            // Validate - require at least one image
+            if (state.images.length === 0) {
+                showError('กรุณาอัพโหลดรูปภาพอย่างน้อย 1 รูป');
+                return;
+            }
+
+            // Check webhook URL
+            if (CONFIG.WEBHOOK_URL === 'YOUR_N8N_WEBHOOK_URL_HERE') {
+                showError('ยังไม่ได้ตั้งค่า Webhook URL');
+                return;
+            }
+
+            // Start loading
+            state.isSubmitting = true;
+            elements.submitBtn.classList.add('loading');
+            elements.submitBtn.disabled = true;
+
+            try {
+                // Prepare data - send all images as array
+                const data = {
+                    type: state.type,
+                    images: state.images.map(img => ({
+                        data: img.data,
+                        mimeType: img.mimeType
+                    })),
+                    imageCount: state.images.length,
+                    userId: state.userProfile?.userId || 'unknown',
+                    displayName: state.userProfile?.displayName || 'Unknown',
+                    timestamp: new Date().toISOString()
+                };
+
+                // Send to webhook
+                const response = await fetch(CONFIG.WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Success
+                showModal(elements.successModal);
 
             } catch (error) {
-                console.error('Register error:', error);
-                Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: error.message });
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<span>✅</span> ลงทะเบียน';
+                console.error('Submit error:', error);
+                showError('ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง');
+            } finally {
+                state.isSubmitting = false;
+                elements.submitBtn.classList.remove('loading');
+                elements.submitBtn.disabled = false;
             }
         }
 
-        // ==================== UI Functions ====================
-        function showRegisterForm() {
-            document.getElementById('loadingOverlay').classList.add('hidden');
-            document.getElementById('registerCard').classList.remove('hidden');
+        // Reset Form
+        function resetForm() {
+            elements.form.reset();
+            state.images = [];
+            renderImagePreviews();
+            updateImageCount();
+            setType('income');
         }
 
-        function showRegisteredInfo(employee) {
-            document.getElementById('loadingOverlay').classList.add('hidden');
-            document.getElementById('registerCard').classList.add('hidden');
-            document.getElementById('successCard').classList.remove('hidden');
-
-            document.getElementById('infoName').textContent = employee['รายชื่อพนักงาน'] || '-';
-            document.getElementById('infoEmpId').textContent = employee['เลขพนักงาน'] || '-';
-            document.getElementById('infoBranch').textContent = employee['สาขา'] || '-';
-            document.getElementById('infoDept').textContent = employee['แผนก'] || '-';
+        // Show Modal
+        function showModal(modal) {
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
         }
 
+        // Hide Modal
+        function hideModal(modal) {
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // Show Error
         function showError(message) {
-            document.getElementById('loadingOverlay').classList.add('hidden');
-            document.getElementById('errorCard').classList.remove('hidden');
-            document.getElementById('errorMsg').textContent = message;
+            elements.errorMessage.textContent = message;
+            showModal(elements.errorModal);
         }
-
-        // ==================== Event Listeners ====================
-        document.getElementById('registerForm').addEventListener('submit', handleRegister);
-
-        // ==================== Initialize ====================
-        window.addEventListener('load', () => {
-            // Check if running in LIFF or browser
-            if (LIFF_ID === 'YOUR_LIFF_ID_HERE') {
-                // Demo mode - show form without LIFF
-                document.getElementById('loadingOverlay').classList.add('hidden');
-                document.getElementById('displayName').textContent = 'Demo User';
-                userId = 'demo_' + Date.now();
-
-                // Load config and show form
-                loadConfig().then(() => {
-                    document.getElementById('registerCard').classList.remove('hidden');
-                });
-            } else {
-                initializeLiff();
-            }
-        });
     </script>
 </body>
 
